@@ -1,0 +1,8 @@
+⨯ Another next dev server is already running.
+
+- Local:        http://localhost:3000
+- PID:          18356
+- Dir:          D:\work\python\image-compressor-app\frontend
+- Log:          .next\dev\logs\next-development.log
+
+Run taskkill /PID 18356 /F to stop it.

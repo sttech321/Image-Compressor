@@ -1,0 +1,18 @@
+
+> frontend@0.1.0 dev
+> next dev
+
+▲ Next.js 16.2.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.1.36:3000
+- Environments: .env.local
+✓ Ready in 475ms
+Creating turbopack project {
+  dir: 'D:\\work\\python\\image-compressor-app\\frontend',
+  testMode: true
+}
+
+ GET / 200 in 326ms (next.js: 181ms, application-code: 145ms)
+ GET / 200 in 94ms (next.js: 8ms, application-code: 87ms)
+ GET / 200 in 56ms (next.js: 7ms, application-code: 49ms)
+[?25h
