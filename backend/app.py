@@ -33,7 +33,21 @@ os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = MAX_FILE_SIZE
-FFMPEG_PATH = os.environ.get('FFMPEG_PATH', r'C:\ffmpeg\bin')
+
+
+def _default_ffmpeg_path():
+    explicit = os.environ.get('FFMPEG_PATH')
+    if explicit:
+        return explicit
+    ffmpeg = shutil.which('ffmpeg')
+    if ffmpeg:
+        return str(Path(ffmpeg).parent)
+    if os.name == 'nt':
+        return r'C:\ffmpeg\bin'
+    return '/usr/bin'
+
+
+FFMPEG_PATH = _default_ffmpeg_path()
 
 
 def allowed_file(filename):
@@ -220,6 +234,22 @@ def list_decompressed_files(folder_path, folder_name, original_sizes=None):
         })
 
     return files
+
+@app.route('/', methods=['GET'])
+def index():
+    """Landing page for direct visits to the API host (e.g. localhost:5000)."""
+    return jsonify({
+        'service': 'Image Compressor API',
+        'status': 'ok',
+        'message': 'API is running. Open the web UI at http://localhost:3000 (not this URL).',
+        'health': '/api/health',
+        'endpoints': {
+            'compress': 'POST /api/compress',
+            'decompress': 'POST /api/decompress',
+            'download': 'GET /api/download/<filename>',
+        },
+    }), 200
+
 
 @app.route('/api/health', methods=['GET'])
 def health():

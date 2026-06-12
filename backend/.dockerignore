@@ -1,0 +1,11 @@
+__pycache__
+*.py[cod]
+*.egg-info
+.env
+.env.*
+uploads/*
+!uploads/.gitkeep
+.git
+.gitignore
+*.md
+.DS_Store

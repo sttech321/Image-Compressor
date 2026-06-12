@@ -1,0 +1,33 @@
+# Render Blueprint: https://render.com/docs/blueprint-spec
+# Deploy: Render Dashboard → New → Blueprint → connect this repo.
+services:
+  # Backend API (Docker: Python + FFmpeg + Gunicorn)
+  - type: web
+    name: image-compressor-api
+    runtime: docker
+    plan: free
+    region: oregon
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    healthCheckPath: /api/health
+    envVars:
+      - key: FFMPEG_PATH
+        value: /usr/bin
+
+  # Next.js frontend (calls API via NEXT_PUBLIC_API_URL at build time)
+  - type: web
+    name: image-compressor-web
+    runtime: node
+    plan: free
+    region: oregon
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: 20.11.0
+      - key: NEXT_PUBLIC_API_URL
+        fromService:
+          type: web
+          name: image-compressor-api
+          property: url

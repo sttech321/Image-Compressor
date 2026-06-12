@@ -1,0 +1,23 @@
+# test data & outputs
+testdata/
+test_collections/
+singletons/
+*.dcv
+benchmark_log.txt
+restored/
+recon/
+*_roundtrip/
+*_rt/
+
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# os
+.DS_Store
+Thumbs.db
+
+# ffmpeg backup created by updater
+bin_backup/
