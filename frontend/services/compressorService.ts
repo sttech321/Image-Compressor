@@ -1,13 +1,32 @@
-function normalizeApiBaseUrl(raw: string | undefined): string {
-  const trimmed = (raw || 'http://localhost:5000').trim().replace(/\/$/, '');
+function normalizeApiBaseUrl(raw: string): string {
+  const trimmed = raw.trim().replace(/\/$/, '');
   if (/^https?:\/\//i.test(trimmed)) {
     return trimmed;
   }
-  // Render fromService.host is hostname only (no scheme).
   return `https://${trimmed}`;
 }
 
-const API_BASE_URL = normalizeApiBaseUrl(process.env.NEXT_PUBLIC_API_URL);
+function resolveApiBaseUrl(): string {
+  const configured = process.env.NEXT_PUBLIC_API_URL?.trim();
+
+  // Explicit non-local URL (optional direct API mode).
+  if (configured && !/localhost|127\.0\.0\.1/i.test(configured)) {
+    return normalizeApiBaseUrl(configured);
+  }
+
+  // Local dev: talk to Flask on :5000.
+  if (typeof window !== 'undefined') {
+    const host = window.location.hostname;
+    if (host === 'localhost' || host === '127.0.0.1') {
+      return normalizeApiBaseUrl(configured || 'http://localhost:5000');
+    }
+  }
+
+  // Production (e.g. Render): same-origin proxy via app/api/[...path]/route.ts
+  return '';
+}
+
+const API_BASE_URL = resolveApiBaseUrl();
 
 function toApiUrl(pathOrUrl: string): string {
   try {

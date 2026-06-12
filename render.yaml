@@ -26,7 +26,8 @@ services:
     envVars:
       - key: NODE_VERSION
         value: 20.11.0
-      - key: NEXT_PUBLIC_API_URL
+      # Runtime env for Next.js API proxy (not baked at build time).
+      - key: API_URL
         fromService:
           type: web
           name: image-compressor-api
