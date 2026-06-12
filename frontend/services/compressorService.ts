@@ -1,6 +1,13 @@
-const API_BASE_URL = (
-  process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
-).replace(/\/$/, '');
+function normalizeApiBaseUrl(raw: string | undefined): string {
+  const trimmed = (raw || 'http://localhost:5000').trim().replace(/\/$/, '');
+  if (/^https?:\/\//i.test(trimmed)) {
+    return trimmed;
+  }
+  // Render fromService.host is hostname only (no scheme).
+  return `https://${trimmed}`;
+}
+
+const API_BASE_URL = normalizeApiBaseUrl(process.env.NEXT_PUBLIC_API_URL);
 
 function toApiUrl(pathOrUrl: string): string {
   try {
