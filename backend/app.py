@@ -400,12 +400,35 @@ def decompress():
         env = os.environ.copy()
         env['PATH'] = FFMPEG_PATH + os.pathsep + env.get('PATH', '')
 
+        # result = subprocess.run(cmd, capture_output=True, text=True, timeout=600, env=env)
+        # print("STDOUT:", result.stdout)
+        # print("STDERR:", result.stderr)
+        # if result.returncode != 0:
+        #     return jsonify({'error': 'Decompression failed', 'details': result.stderr}), 500
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=600, env=env)
+
         print("STDOUT:", result.stdout)
         print("STDERR:", result.stderr)
-        if result.returncode != 0:
-            return jsonify({'error': 'Decompression failed', 'details': result.stderr}), 500
+        print("Output archive:", output_archive)
+        print("Exists:", os.path.exists(output_archive))
 
+        if result.returncode != 0:
+            return jsonify({
+                'error': 'Compression failed',
+                'stdout': result.stdout,
+                'stderr': result.stderr
+            }), 500
+
+        if not os.path.exists(output_archive):
+            return jsonify({
+                'error': 'Archive was not created',
+                'stdout': result.stdout,
+                'stderr': result.stderr,
+                'output_archive': output_archive
+            }), 500
+
+        # Get file info
+        file_size = os.path.getsize(output_archive) / (1024 * 1024)  # MB
         convert_decompressed_images(Path(output_folder), image_format)
 
         # List decompressed image files recursively. Archives preserve the
