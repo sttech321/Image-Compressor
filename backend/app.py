@@ -22,8 +22,9 @@ CORS(app)
 
 # Configuration
 # UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'uploads')
-UPLOAD_FOLDER = tempfile.gettempdir()
-OUTPUT_FOLDER = os.path.join(UPLOAD_FOLDER, 'output')
+# OUTPUT_FOLDER = os.path.join(UPLOAD_FOLDER, 'output')
+UPLOAD_FOLDER = os.path.join(tempfile.gettempdir(), 'uploads')
+OUTPUT_FOLDER = os.path.join(tempfile.gettempdir(), 'output')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp', 'bmp', 'tif', 'tiff', 'dcv'}
 IMAGE_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp', 'bmp', 'tif', 'tiff'}
 IMAGE_DOWNLOAD_FORMATS = {'original', 'png', 'jpeg', 'webp'}
