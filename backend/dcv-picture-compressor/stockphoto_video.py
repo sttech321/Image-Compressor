@@ -36,33 +36,47 @@ MAGIC      = b"DCV2"
 IMG_EXTS   = {".png", ".jpg", ".jpeg", ".webp", ".bmp", ".tiff"}
 
 
+# def _resolve_ffmpeg():
+#     """ffmpeg-Binary finden, auch wenn der PATH (noch) nicht aktualisiert
+#     ist (typisch direkt nach einer winget/choco-Installation, solange die
+#     Shell nicht neu gestartet wurde). Reihenfolge: ENV-Override -> PATH ->
+#     bekannte Installationsorte (winget/choco/scoop)."""
+#     env = os.environ.get("FFMPEG_BINARY")
+#     if env and Path(env).exists():
+#         return env
+#     found = shutil.which("ffmpeg")
+#     if found:
+#         return found
+#     home = Path.home()
+#     candidates = [
+#         home / "AppData/Local/Microsoft/WinGet/Links/ffmpeg.exe",
+#         Path("C:/ProgramData/chocolatey/bin/ffmpeg.exe"),
+#         home / "scoop/shims/ffmpeg.exe",
+#     ]
+#     candidates += list(
+#         (home / "AppData/Local/Microsoft/WinGet/Packages").glob(
+#             "Gyan.FFmpeg*/**/bin/ffmpeg.exe"
+#         )
+#     )
+#     for c in candidates:
+#         if c.exists():
+#             return str(c)
+#     return "ffmpeg"  # letzter Versuch: PATH zur Laufzeit
 def _resolve_ffmpeg():
-    """ffmpeg-Binary finden, auch wenn der PATH (noch) nicht aktualisiert
-    ist (typisch direkt nach einer winget/choco-Installation, solange die
-    Shell nicht neu gestartet wurde). Reihenfolge: ENV-Override -> PATH ->
-    bekannte Installationsorte (winget/choco/scoop)."""
+    local_ffmpeg = Path(__file__).parent / "bin" / "ffmpeg"
+
+    if local_ffmpeg.exists():
+        return str(local_ffmpeg)
+
     env = os.environ.get("FFMPEG_BINARY")
     if env and Path(env).exists():
         return env
+
     found = shutil.which("ffmpeg")
     if found:
         return found
-    home = Path.home()
-    candidates = [
-        home / "AppData/Local/Microsoft/WinGet/Links/ffmpeg.exe",
-        Path("C:/ProgramData/chocolatey/bin/ffmpeg.exe"),
-        home / "scoop/shims/ffmpeg.exe",
-    ]
-    candidates += list(
-        (home / "AppData/Local/Microsoft/WinGet/Packages").glob(
-            "Gyan.FFmpeg*/**/bin/ffmpeg.exe"
-        )
-    )
-    for c in candidates:
-        if c.exists():
-            return str(c)
-    return "ffmpeg"  # letzter Versuch: PATH zur Laufzeit
 
+    return "ffmpeg"
 
 FFMPEG     = _resolve_ffmpeg()
 # -nostdin: ffmpeg darf NICHT die Tastatur abgreifen. Ohne das frisst
