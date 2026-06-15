@@ -8,6 +8,7 @@ import subprocess
 import shutil
 import io
 import zipfile
+import tempfile
 from urllib.parse import quote
 from PIL import Image
 
@@ -20,7 +21,8 @@ app = Flask(__name__)
 CORS(app)
 
 # Configuration
-UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'uploads')
+# UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'uploads')
+UPLOAD_FOLDER = tempfile.gettempdir()
 OUTPUT_FOLDER = os.path.join(UPLOAD_FOLDER, 'output')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp', 'bmp', 'tif', 'tiff', 'dcv'}
 IMAGE_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp', 'bmp', 'tif', 'tiff'}
