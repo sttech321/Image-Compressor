@@ -2,7 +2,7 @@ import { NextRequest } from 'next/server';
 import { backendOrigin } from '@/lib/backendOrigin';
 
 export const runtime = 'nodejs';
-export const maxDuration = 600;
+export const maxDuration = 300;
 
 async function proxyRequest(
   request: NextRequest,
