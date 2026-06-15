@@ -9,6 +9,7 @@ import shutil
 import io
 import zipfile
 import tempfile
+import traceback
 from urllib.parse import quote
 from PIL import Image
 
@@ -350,8 +351,13 @@ def compress():
             'download_url': f'/api/download/{os.path.basename(output_archive)}'
         }), 200
 
+    # except Exception as e:
+    #     return jsonify({'error': str(e)}), 500
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({
+            'error': str(e),
+            'traceback': traceback.format_exc()
+        }), 500
 
 @app.route('/api/decompress', methods=['POST'])
 def decompress():
@@ -395,7 +401,8 @@ def decompress():
         env['PATH'] = FFMPEG_PATH + os.pathsep + env.get('PATH', '')
 
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=600, env=env)
-        
+        print("STDOUT:", result.stdout)
+        print("STDERR:", result.stderr)
         if result.returncode != 0:
             return jsonify({'error': 'Decompression failed', 'details': result.stderr}), 500
 
