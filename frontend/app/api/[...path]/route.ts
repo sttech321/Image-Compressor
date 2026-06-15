@@ -30,16 +30,35 @@ async function proxyRequest(
     init.duplex = 'half';
   }
 
-  const response = await fetch(target, init);
+  // const response = await fetch(target, init);
 
-  const responseHeaders = new Headers(response.headers);
-  responseHeaders.delete('content-encoding');
+  // const responseHeaders = new Headers(response.headers);
+  // responseHeaders.delete('content-encoding');
 
-  return new Response(response.body, {
-    status: response.status,
-    statusText: response.statusText,
-    headers: responseHeaders,
-  });
+  // return new Response(response.body, {
+  //   status: response.status,
+  //   statusText: response.statusText,
+  //   headers: responseHeaders,
+  // });
+
+  console.log('Backend URL:', target);
+
+const response = await fetch(target, init);
+
+console.log('Backend Status:', response.status);
+
+const body = await response.text();
+
+console.log('Backend Response:', body);
+
+const responseHeaders = new Headers(response.headers);
+responseHeaders.delete('content-encoding');
+
+return new Response(body, {
+  status: response.status,
+  statusText: response.statusText,
+  headers: responseHeaders,
+});
 }
 
 type RouteContext = { params: Promise<{ path: string[] }> };
