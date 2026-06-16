@@ -43,6 +43,19 @@ def _default_ffmpeg_path():
     explicit = os.environ.get('FFMPEG_PATH')
     if explicit:
         return explicit
+    
+    # Check if we have a local bin folder
+    local_bin = Path(__file__).resolve().parent / "bin"
+    binary_name = "ffmpeg.exe" if os.name == "nt" else "ffmpeg"
+    if (local_bin / binary_name).exists():
+        return str(local_bin)
+
+    # Check common serverless layer paths
+    if os.name != "nt":
+        for path in ["/opt/bin", "/usr/bin", "/usr/local/bin"]:
+            if Path(path).exists() and (Path(path) / "ffmpeg").exists():
+                return path
+
     ffmpeg = shutil.which('ffmpeg')
     if ffmpeg:
         return str(Path(ffmpeg).parent)

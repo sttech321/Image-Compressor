@@ -63,15 +63,33 @@ IMG_EXTS   = {".png", ".jpg", ".jpeg", ".webp", ".bmp", ".tiff"}
 #             return str(c)
 #     return "ffmpeg"  # letzter Versuch: PATH zur Laufzeit
 def _resolve_ffmpeg():
-    local_ffmpeg = Path(__file__).parent.parent / "bin" / "ffmpeg"
+    binary_name = "ffmpeg.exe" if os.name == "nt" else "ffmpeg"
+    local_ffmpeg = Path(__file__).resolve().parent.parent / "bin" / binary_name
     print("Checking:", local_ffmpeg)
     print("Exists:", local_ffmpeg.exists())
     if local_ffmpeg.exists():
+        if os.name != 'nt':
+            try:
+                st = os.stat(local_ffmpeg)
+                os.chmod(local_ffmpeg, st.st_mode | 0o111)
+            except Exception as e:
+                print(f"Warning: failed to chmod {local_ffmpeg}: {e}")
         return str(local_ffmpeg)
 
     env = os.environ.get("FFMPEG_BINARY")
     if env and Path(env).exists():
         return env
+
+    if os.name != "nt":
+        for path in ["/opt/bin/ffmpeg", "/usr/bin/ffmpeg", "/usr/local/bin/ffmpeg"]:
+            p = Path(path)
+            if p.exists():
+                try:
+                    st = os.stat(p)
+                    os.chmod(p, st.st_mode | 0o111)
+                except Exception:
+                    pass
+                return path
 
     found = shutil.which("ffmpeg")
     if found:
