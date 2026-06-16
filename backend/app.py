@@ -271,7 +271,11 @@ def index():
 @app.route('/api/health', methods=['GET'])
 def health():
     """Health check endpoint"""
-    return jsonify({'status': 'ok', 'message': 'Server is running'}), 200
+    return jsonify({
+        'status': 'ok',
+        'message': 'Server is running',
+        'version': '1.0.1'
+    }), 200
 
 @app.route('/api/compress', methods=['POST'])
 def compress():
