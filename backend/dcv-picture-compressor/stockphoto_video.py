@@ -64,7 +64,8 @@ IMG_EXTS   = {".png", ".jpg", ".jpeg", ".webp", ".bmp", ".tiff"}
 #     return "ffmpeg"  # letzter Versuch: PATH zur Laufzeit
 def _resolve_ffmpeg():
     local_ffmpeg = Path(__file__).parent.parent / "bin" / "ffmpeg"
-
+    print("Checking:", local_ffmpeg)
+    print("Exists:", local_ffmpeg.exists())
     if local_ffmpeg.exists():
         return str(local_ffmpeg)
 
@@ -79,6 +80,7 @@ def _resolve_ffmpeg():
     return "ffmpeg"
 
 FFMPEG     = _resolve_ffmpeg()
+print("FFMPEG =", FFMPEG)
 # -nostdin: ffmpeg darf NICHT die Tastatur abgreifen. Ohne das frisst
 # ffmpeg bei laengeren Laeufen die Befehle, die der Nutzer danach tippt
 # (sichtbar als "Enter command:" / "Parse error" Meldungen).
