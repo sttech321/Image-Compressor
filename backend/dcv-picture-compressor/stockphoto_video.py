@@ -63,7 +63,7 @@ IMG_EXTS   = {".png", ".jpg", ".jpeg", ".webp", ".bmp", ".tiff"}
 #             return str(c)
 #     return "ffmpeg"  # letzter Versuch: PATH zur Laufzeit
 def _resolve_ffmpeg():
-    local_ffmpeg = Path(__file__).parent / "bin" / "ffmpeg"
+    local_ffmpeg = Path(__file__).parent.parent / "bin" / "ffmpeg"
 
     if local_ffmpeg.exists():
         return str(local_ffmpeg)
